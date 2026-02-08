@@ -1,6 +1,7 @@
 
 import logging
 import asyncio
+import time
 from typing import Dict, Any, List
 from src.orderbook.book import OrderBook
 from src.orderbook.snapshot_manager import SnapshotManager
@@ -24,6 +25,7 @@ class DataProcessor:
         self.depth_initialized = False
         self.depth_buffer: List[Dict[str, Any]] = []
         self.latest_price = 0.0
+        self.last_snapshot_attempt = 0.0
 
     async def process_message(self, msg: Dict[str, Any]):
         """
@@ -78,6 +80,12 @@ class DataProcessor:
         if len(self.depth_buffer) < 5: 
              return
 
+        # Rate Limit / Backoff for Snapshot
+        now = time.time()
+        if now - self.last_snapshot_attempt < 10: # 10 seconds cooldown
+            return
+
+        self.last_snapshot_attempt = now
         snapshot = await self.rest_client.get_depth_snapshot(self.symbol)
         if not snapshot:
              return
