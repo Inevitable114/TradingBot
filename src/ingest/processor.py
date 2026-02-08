@@ -135,7 +135,7 @@ class DataProcessor:
             # If we went through whole buffer and didn't find sync, 
             # we might need to wait for more events or retry snapshot if buffer is too old.
             # For now, just keep buffering.
-            if len(self.depth_buffer) > 1000:
+            if len(self.depth_buffer) > 5000:
                 logger.warning("Depth buffer too large without sync. Clearing to retry.")
                 self.depth_buffer.clear()
 
