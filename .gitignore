@@ -1,0 +1,15 @@
+
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+env/
+snapshots/
+logs/
+.DS_Store
+.idea/
+.vscode/
+# deployment zip if created
+*.zip
